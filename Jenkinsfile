@@ -19,11 +19,14 @@ pipeline {
       }
     }
     stage('Docker Push') {
-        agent any
-        steps {
-            sh 'docker push juanchito1527/spring-petclinic:gestion-udem-jenkins'
+      agent any
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USER')]) {
+          sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin'
+          sh 'docker push juanchito1527/spring-petclinic:gestion-udem-jenkins'
         }
-    }
+      }
     }
   }
+}
 
